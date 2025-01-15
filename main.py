@@ -27,7 +27,7 @@ from struct import pack, unpack
 
 class cdp_client:
 
-    def __init__(self, paths, ports):
+    def __init__(self,  ports):
     # def __init__(self, paths, ports):
         """
         Arguments:
