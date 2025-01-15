@@ -1,0 +1,13 @@
+name: "cpd-data-reader"
+version: "0.1.0"
+description: "Cloud Droplet Probe CDP-2 application"
+keywords: ""
+authors: "Raj Sankaran"
+collaborators: ""
+funding: ""
+license: ""
+homepage: ""
+source:
+  architectures:
+    - "linux/amd64"
+    - "linux/arm64"
