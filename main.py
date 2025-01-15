@@ -28,27 +28,16 @@ from struct import pack, unpack
 class cdp_client:
 
     def __init__(self,  ports):
-    # def __init__(self, paths, ports):
+
         """
-        Arguments:
-            paths: [dict] containing path to write data to
-            ports: [dict] containing path to serial port to cdp sensors
+        Argument:
+            ports: [dict] containing path to serial port to cdp sensor
         """
 
         self.ON = True  # if False, kills all threads
 
         ### Sensor Setup ###
         self.cdp_port = ports["cdp"]  # sensor port on cdp
-        # self.cdp_path = paths["cdp"]  # path to write cdp data to
-
-        ### Data Logging ###
-        # self.cdp_file = open(self.cdp_path, "w+")
-
-        ### Data Writers ###
-        # self.cdp_writer = csv.writer(self.cdp_file)
-
-        ### Write Headers ###
-        # self.cdp_writer.writerow(cdp_header)
 
         ### CDP Utilities Initialization ###
         self.cdp_decoder = CDP_decoder()
@@ -83,8 +72,6 @@ class cdp_client:
                         unpacked_line = self.cdp_decoder.decode(line, 'confirm')
                         print (str(time.time()) + ',')
                         print (''.join((str(e)+',') for e in unpacked_line) + '\n')
-                        # self.cdp_file.write(str(time.time()) + ',')
-                        # self.cdp_file.write(''.join((str(e)+',') for e in unpacked_line) + '\n')
                         if unpacked_line[0] == 6 and unpacked_line[1] == 6:
                             cdp_initialized = True
                             print('CDP initialized!')
@@ -105,11 +92,13 @@ class cdp_client:
                     ser.write(request_msg)
                     line = ser.read(156)
                     if line != b'':
+                        snapshot.timestamp=time.time()
                         unpacked_line = self.cdp_decoder.decode(line, 'data')
                         converted_line = self.cdp_converter.convertCDPMessage(unpacked_line)
                         self.cdp_data = converted_line
-                        #self.cdp_writer.writerow([time.time()] + converted_line  + [line])  # save off data
                         print ([time.time()] + converted_line  + [line])  #  write data to screen
+                        plugin.publish("decoded-data", converted_line, timestamp=snapshot.timestamp)
+                        plugin.publish("raw-data", [line], timestamp=snapshot.timestamp)
                         # self.cdp_file.flush()
                 except Exception as e:
                     print('FAILED TO GET DATA FROM CDP, RESTARTING... %s' % e)
