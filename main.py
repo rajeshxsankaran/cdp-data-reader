@@ -94,11 +94,11 @@ class cdp_client:
                     if line != b'':
                         snapshot.timestamp=time.time()
                         unpacked_line = self.cdp_decoder.decode(line, 'data')
-                        converted_line = self.cdp_converter.convertCDPMessage(unpacked_line)
+                        #converted_line = self.cdp_converter.convertCDPMessage(unpacked_line)
                         self.cdp_data = converted_line
                         print ([time.time()] + converted_line  + [line])  #  write data to screen
-                        plugin.publish("decoded-data", converted_line, timestamp=snapshot.timestamp)
-                        plugin.publish("raw-data", [line], timestamp=snapshot.timestamp)
+                        #plugin.publish("decoded-data", converted_line, timestamp=snapshot.timestamp)
+                        plugin.publish("raw-data", str(line), timestamp=snapshot.timestamp)
                         # self.cdp_file.flush()
                 except Exception as e:
                     print('FAILED TO GET DATA FROM CDP, RESTARTING... %s' % e)
