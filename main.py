@@ -49,8 +49,8 @@ class cdp_client:
     def start_cdp_thread(self):
         cdp_connected = False
         cdp_initialized = False
-        init_msg = self.cdp_decoder.create_init_msg() 
-        request_msg = self.cdp_decoder.create_data_msg() 
+        init_msg = self.cdp_decoder.create_init_msg()
+        request_msg = self.cdp_decoder.create_data_msg()
         while self.ON:
             try:
                 ser = serial.Serial(self.cdp_port, 57600, timeout = 1) # open serial port
@@ -91,15 +91,15 @@ class cdp_client:
                     ser.flushOutput()
                     ser.write(request_msg)
                     line = ser.read(156)
-                    acq_timestamp=time.time()
                     if line != b'':
+                        acquisition_timestamp=time.time()
                         unpacked_line = self.cdp_decoder.decode(line, 'data')
-                        #converted_line = self.cdp_converter.convertCDPMessage(unpacked_line)
-                        #self.cdp_data = converted_line
-                        print ([time.time()] + str(line)  #  write data to screen
-                        #plugin.publish("decoded-data", converted_line, timestamp=acq_timestamp)
+                        converted_line = self.cdp_converter.convertCDPMessage(unpacked_line)
+                        self.cdp_data = converted_line
+                        print ([time.time()] + converted_line  + [line])  #  write data to screen
                         with Plugin() as plugin:
-                            plugin.publish("raw-data", str(line), timestamp=acq_timestamp)
+                                plugin.publish("decoded.data", converted_line, timestamp=acquisition_timestamp)
+                                plugin.publish("raw.data", [line], timestamp=acquisition_timestamp)
                         # self.cdp_file.flush()
                 except Exception as e:
                     print('FAILED TO GET DATA FROM CDP, RESTARTING... %s' % e)
@@ -115,21 +115,7 @@ class cdp_client:
 
 if __name__ == "__main__":
 
-    # load configuration file
-    # with open("config.yaml", 'r') as ymlfile:
-    #     cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
-
-    # setup files and ports to connect to
-    # now = datetime.now()
-    # cdp_path = "/tmp/" + 'cdp_' + now.strftime("%d_%m_%Y_%H_%M_%S") + ".csv"
-    # cdp_port = cfg['cdp']['port']
-
     ports = {'cdp':'/dev/ttyUSB0'}
-    # paths = {'cdp':cdp_path}
     print (ports)
-    # print (paths)
-    # initialize client
     client = cdp_client(ports)
-    # client = cdp_client(paths, ports)
-    # start up sensor connection and process
     client.main()
