@@ -96,7 +96,6 @@ class cdp_client:
                         unpacked_line = self.cdp_decoder.decode(line, 'data')
                         #converted_line = self.cdp_converter.convertCDPMessage(unpacked_line)
                         #self.cdp_data = converted_line
-
                         print ([time.time()] + str(line)  #  write data to screen
                         #plugin.publish("decoded-data", converted_line, timestamp=acq_timestamp)
                         with Plugin() as plugin:
