@@ -92,13 +92,14 @@ class cdp_client:
                     ser.write(request_msg)
                     line = ser.read(156)
                     if line != b'':
-                        snapshot.timestamp=time.time()
+                        acquisition_timestamp=time.time()
                         unpacked_line = self.cdp_decoder.decode(line, 'data')
                         converted_line = self.cdp_converter.convertCDPMessage(unpacked_line)
                         self.cdp_data = converted_line
                         print ([time.time()] + converted_line  + [line])  #  write data to screen
-                        plugin.publish("decoded-data", converted_line, timestamp=snapshot.timestamp)
-                        plugin.publish("raw-data", [line], timestamp=snapshot.timestamp)
+                        with Plugin() as plugin:
+                                plugin.publish("decoded.data", converted_line, timestamp=acquisition_timestamp)
+                                plugin.publish("raw.data", [line], timestamp=acquisition_timestamp)
                         # self.cdp_file.flush()
                 except Exception as e:
                     print('FAILED TO GET DATA FROM CDP, RESTARTING... %s' % e)
@@ -114,21 +115,7 @@ class cdp_client:
 
 if __name__ == "__main__":
 
-    # load configuration file
-    # with open("config.yaml", 'r') as ymlfile:
-    #     cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
-
-    # setup files and ports to connect to
-    # now = datetime.now()
-    # cdp_path = "/tmp/" + 'cdp_' + now.strftime("%d_%m_%Y_%H_%M_%S") + ".csv"
-    # cdp_port = cfg['cdp']['port']
-
     ports = {'cdp':'/dev/ttyUSB0'}
-    # paths = {'cdp':cdp_path}
     print (ports)
-    # print (paths)
-    # initialize client
     client = cdp_client(ports)
-    # client = cdp_client(paths, ports)
-    # start up sensor connection and process
     client.main()
