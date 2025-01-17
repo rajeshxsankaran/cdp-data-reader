@@ -14,7 +14,6 @@ Update Notes:
 """
 from waggle.plugin import Plugin
 import serial
-import yaml
 from datetime import datetime
 import time
 import csv
@@ -97,7 +96,7 @@ class cdp_client:
                         # converted_line = self.cdp_converter.convertCDPMessage(unpacked_line)
                         # self.cdp_data = converted_line
                         # print (str(line))  #  write data to screen
-                        # print (time.time(), str(line))  #  write data to screen
+                        print (time.time(), str(line))  #  write data to screen
                         with Plugin() as plugin:
                                 # plugin.publish("decoded.data", converted_line, timestamp=acquisition_timestamp)
                                 plugin.publish("raw.data", str(line), timestamp=acquisition_timestamp)
@@ -116,7 +115,7 @@ class cdp_client:
 
 if __name__ == "__main__":
 
-    ports = {'cdp':'/dev/ttyUSB0'}
-    print (ports)
+    ports = {'cdp':'/host/dev/ttyUSB0'}
+    print (ports, flush=True)
     client = cdp_client(ports)
     client.main()
