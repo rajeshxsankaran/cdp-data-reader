@@ -92,11 +92,12 @@ class cdp_client:
                     ser.write(request_msg)
                     line = ser.read(156)
                     if line != b'':
-                        acquisition_timestamp=time.time()
+                        acquisition_timestamp=time.time_ns()
                         unpacked_line = self.cdp_decoder.decode(line, 'data')
                         converted_line = self.cdp_converter.convertCDPMessage(unpacked_line)
                         self.cdp_data = converted_line
-                        print (time.time(), str(line))  #  write data to screen
+                        print (str(line))  #  write data to screen
+                        # print (time.time(), str(line))  #  write data to screen
                         with Plugin() as plugin:
                                 # plugin.publish("decoded.data", converted_line, timestamp=acquisition_timestamp)
                                 plugin.publish("raw.data", str(line), timestamp=acquisition_timestamp)
