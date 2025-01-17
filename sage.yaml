@@ -1,11 +1,11 @@
 name: "cpd-data-reader"
 version: "0.1.0"
 description: "Cloud Droplet Probe CDP-2 application"
-keywords: ""
+keywords: "CDP, Clouds, Droplets, LiDAR"
 authors: "Raj Sankaran"
-collaborators: ""
-funding: ""
-license: ""
+collaborators: "Yongho Kim, Alex Hirst, Thomas W. Giambelluca, Han Tseng, Dylan Giardina, Pete Beckman"
+funding: "NSF Rapid"
+license: "MIT"
 homepage: ""
 source:
   architectures:
