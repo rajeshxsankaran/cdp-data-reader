@@ -14,7 +14,7 @@ Update Notes:
 """
 from waggle.plugin import Plugin
 import serial
-import yaml
+#import yaml
 from datetime import datetime
 import time
 import csv
