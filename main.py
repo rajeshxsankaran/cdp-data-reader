@@ -86,7 +86,7 @@ class cdp_client:
 
             while self.ON and cdp_connected and cdp_initialized:
                 try:
-                    time.sleep(1)  # give CDP time to think
+                    time.sleep(14.5)  # give CDP time to think
                     ser.flushInput()
                     ser.flushOutput()
                     ser.write(request_msg)
@@ -94,9 +94,9 @@ class cdp_client:
                     if line != b'':
                         acquisition_timestamp=time.time_ns()
                         unpacked_line = self.cdp_decoder.decode(line, 'data')
-                        converted_line = self.cdp_converter.convertCDPMessage(unpacked_line)
-                        self.cdp_data = converted_line
-                        print (str(line))  #  write data to screen
+                        # converted_line = self.cdp_converter.convertCDPMessage(unpacked_line)
+                        # self.cdp_data = converted_line
+                        # print (str(line))  #  write data to screen
                         # print (time.time(), str(line))  #  write data to screen
                         with Plugin() as plugin:
                                 # plugin.publish("decoded.data", converted_line, timestamp=acquisition_timestamp)
