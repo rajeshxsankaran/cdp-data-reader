@@ -104,7 +104,7 @@ class cdp_client:
                         with Plugin() as plugin:
                                 # plugin.publish("decoded.data", converted_line, timestamp=acquisition_timestamp)
                                 plugin.publish("raw.data", str(line), timestamp=acquisition_timestamp)
-                                plugin.publish("rawZB64.data", rawb64_data, timestamp=acquisition_timestamp)
+                                plugin.publish("rawZB64.data", rawzb64_data, timestamp=acquisition_timestamp)
                         # self.cdp_file.flush()
                 except Exception as e:
                     print('FAILED TO GET DATA FROM CDP, RESTARTING... %s' % e)
