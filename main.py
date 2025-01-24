@@ -88,6 +88,7 @@ class cdp_client:
 
             while self.ON and cdp_connected and cdp_initialized:
                 try:
+                    time.sleep(5)
                     ser.flushInput()
                     ser.flushOutput()
                     ser.write(request_msg)
@@ -110,7 +111,7 @@ class cdp_client:
                     print('FAILED TO GET DATA FROM CDP, RESTARTING... %s' % e)
                     cdp_connected = False
                     cdp_initialized = False
-            time.sleep(2)
+                
 
 
     def main(self):
