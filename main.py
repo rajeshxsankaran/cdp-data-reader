@@ -100,7 +100,7 @@ class cdp_client:
                         # print (str(line))  #  write data to screen
                         # print (time.time(), str(line))  #  write data to screen
                         rawzb64_data = base64.b64encode(zlib.compress(line)).decode()
-                        print (time.time(), rawzb64_data)  #  write data to screen
+                        # print (time.time(), rawzb64_data)  #  write data to screen
                         with Plugin() as plugin:
                                 # plugin.publish("decoded.data", converted_line, timestamp=acquisition_timestamp)
                                 plugin.publish("raw.data", str(line), timestamp=acquisition_timestamp)
