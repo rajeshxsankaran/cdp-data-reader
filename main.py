@@ -88,7 +88,6 @@ class cdp_client:
 
             while self.ON and cdp_connected and cdp_initialized:
                 try:
-                    time.sleep(14.5)  # give CDP time to think
                     ser.flushInput()
                     ser.flushOutput()
                     ser.write(request_msg)
@@ -101,6 +100,7 @@ class cdp_client:
                         # print (str(line))  #  write data to screen
                         # print (time.time(), str(line))  #  write data to screen
                         rawzb64_data = base64.b64encode(zlib.compress(line))
+                        print (time.time(), rawzb64_data)  #  write data to screen
                         with Plugin() as plugin:
                                 # plugin.publish("decoded.data", converted_line, timestamp=acquisition_timestamp)
                                 plugin.publish("raw.data", str(line), timestamp=acquisition_timestamp)
@@ -110,7 +110,7 @@ class cdp_client:
                     print('FAILED TO GET DATA FROM CDP, RESTARTING... %s' % e)
                     cdp_connected = False
                     cdp_initialized = False
-            time.sleep(1)  # give CDP time to think
+            time.sleep(2)
 
 
     def main(self):
