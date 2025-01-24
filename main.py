@@ -103,7 +103,7 @@ class cdp_client:
                         # print (time.time(), rawzb64_data)  #  write data to screen
                         with Plugin() as plugin:
                                 # plugin.publish("decoded.data", converted_line, timestamp=acquisition_timestamp)
-                                plugin.publish("raw.data", str(line), timestamp=acquisition_timestamp)
+                                # plugin.publish("raw.data", str(line), timestamp=acquisition_timestamp)
                                 plugin.publish("rawzb64.data", rawzb64_data, timestamp=acquisition_timestamp)
                         # self.cdp_file.flush()
                 except Exception as e:
