@@ -1,5 +1,5 @@
 name: "cpd-data-reader"
-version: "0.1.1"
+version: "0.1.2"
 description: "Cloud Droplet Probe CDP-2 application"
 keywords: "CDP, Clouds, Droplets, LiDAR"
 authors: "Raj Sankaran"
