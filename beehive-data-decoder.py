@@ -43,8 +43,11 @@ def convert_numpy_types(obj):
 
 if __name__ == "__main__":
 
-    start_date = "2025-03-18T00:00:00Z"
-    end_date = "2025-03-21T23:59:59Z"
+    node_id = "W097"
+    start_date = "2025-02-18T00:00:00Z"
+    end_date = "2025-02-18T23:59:59Z"
+
+    print("\u2139 Fetching data from",start_date,"to",end_date,"from beehive for node",node_id)
 
     decoder = cdp_beehive_data_decoder()
     df = sage_data_client.query(
@@ -52,10 +55,11 @@ if __name__ == "__main__":
         end=end_date,
         filter={
             "plugin": "registry.sagecontinuum.org/rajesh/cpd-data-reader:0.1.3.*",
-            "vsn": "W097"
+            "vsn": node_id
         }
     )
 
+    print("\u2714 Data download completed. Now decoding and generating CSV file")
     rows = []
     for _, row in df.iterrows():
         timestamp = row["timestamp"]
@@ -77,9 +81,9 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"[ERROR] Failed to decode at {timestamp}: {e}")
 
-    filename = f"decoded-data-{start_date}-{end_date}".replace(":", "").replace("Z", "").replace(".", "")
+    filename = f"decoded-data_{node_id}_{start_date}_{end_date}".replace(":", "").replace("Z", "").replace(".", "")
     filename = filename+'.csv'
-    print(filename)
+    print("\u2139 The data is being written to",filename)
     # Write to CSV
 
     with open(filename, "w", newline="") as csvfile:
@@ -91,3 +95,4 @@ if __name__ == "__main__":
         # Write rows
         writer.writerows(rows)
 
+    print("\u2714 Data writeout completed")
