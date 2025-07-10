@@ -31,13 +31,13 @@ end_date = "2025-03-21T23:59:59Z"
 Each run generates a new CSV file named:
 
 ```bash
-decoded-data-<start>-<end>.csv
+decoded-data-<Node ID>-<start>-<end>.csv
 ```
 
 For example:
 
 ```bash
-decoded-data-2025-03-18T000000-2025-03-21T235959.csv
+decoded-data-W097-2025-02-18T000000-2025-02-21T235959.csv
 ```
 
 ## Output Format
