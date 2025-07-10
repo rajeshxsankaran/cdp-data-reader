@@ -31,13 +31,23 @@ end_date = "2025-03-21T23:59:59Z"
 Each run generates a new CSV file named:
 
 ```bash
-decoded-data-<Node ID>-<start>-<end>.csv
+decoded-data_<Node ID>_<start>_<end>.csv
 ```
 
 For example:
 
 ```bash
-decoded-data-W097-2025-02-18T000000-2025-02-21T235959.csv
+decoded-data_W097_2025-02-18T000000_2025-02-21T235959.csv
+```
+
+Here is an example run:
+
+```
+$ python3 beehive-data-decoder.py 
+ℹ Fetching data from 2025-02-18T00:00:00Z to 2025-02-18T23:59:59Z from beehive for node W097
+✔ Data download completed. Now decoding and generating CSV file
+ℹ The data is being written to decoded-data_W097_2025-02-18T000000_2025-02-18T235959.csv
+✔ Data writeout completed
 ```
 
 ## Output Format
