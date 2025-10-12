@@ -81,7 +81,7 @@ class CDPClient:
         print("CDP initialized, starting data collection...")
         while self.ON:
             try:
-                time.sleep(0.08)
+                time.sleep(0.97)
                 ser.flushInput()
                 ser.flushOutput()
                 ser.write(request_msg)
@@ -91,17 +91,15 @@ class CDPClient:
                     rawzb64_data = base64.b64encode(zlib.compress(line)).decode()
                     self.plugin.publish("rawzb64.data", rawzb64_data, timestamp=timestamp)
                     self.buffer.append((timestamp, rawzb64_data))
-
-                    if time.time() - self.last_process_time >= BUFFER_DURATION_S:
+                    print(time.asctime(),rawzb64_data)
+                    if len(self.buffer) >= 300:
                         fog_present = self.process_buffer()
-                        self.last_process_time = time.time()
-
+                        self.buffer.clear()
                         if not fog_present:
                             print("No fog detected — turning off CDP and pump.")
                             power_switch.turn_off_cdp()
                             power_switch.turn_off_pump()
                             self.ON = False
-                            return
                 else:
                     print("No response from CDP during data read")
             except Exception as e:
@@ -153,8 +151,9 @@ class CDPClient:
         fog_present = lwc > LWC_FOG_THRESHOLD
 
         print(f"Mean LWC = {lwc:.4f} g/m³ | Fog present: {fog_present}")
-        self.plugin.publish("cdp.lwc", lwc)
-        self.plugin.publish("cdp.fog_present", fog_present)
+        timestamp = time.time_ns()
+        self.plugin.publish("cdp.lwc", lwc, timestamp)
+        self.plugin.publish("cdp.fog_present", fog_present, timestamp)
 
         return fog_present
 
