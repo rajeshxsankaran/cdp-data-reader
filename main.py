@@ -92,9 +92,11 @@ class CDPClient:
                     self.plugin.publish("rawzb64.data", rawzb64_data, timestamp=timestamp)
                     self.buffer.append((timestamp, rawzb64_data))
                     print(time.asctime(),rawzb64_data)
-                    if len(self.buffer) >= 300:
+                    if len(self.buffer) >= 30:
                         fog_present = self.process_buffer()
+                        print(fog_present)
                         self.buffer.clear()
+                        print("Buffer Cleared")
                         if not fog_present:
                             print("No fog detected — turning off CDP and pump.")
                             power_switch.turn_off_cdp()
