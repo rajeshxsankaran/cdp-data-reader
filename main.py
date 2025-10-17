@@ -153,7 +153,7 @@ class CDPClient:
         print(f"Mean LWC = {lwc:.4f} g/m³ | Fog present: {fog_present}")
         timestamp = time.time_ns()
         self.plugin.publish("cdp.lwc", lwc, timestamp=timestamp)
-        self.plugin.publish("cdp.fog_present", fog_present, timestamp=timestamp)
+        self.plugin.publish("cdp.fog_present", str(fog_present), timestamp=timestamp)
 
         return fog_present
 
