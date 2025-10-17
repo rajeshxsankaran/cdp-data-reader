@@ -89,10 +89,15 @@ class CDPClient:
                     if line:
                         timestamp = time.time_ns()
                         rawzb64_data = base64.b64encode(zlib.compress(line)).decode()
-                        plugin.publish("rawzb64.data", rawzb64_data, timestamp=timestamp)
+                        #plugin.publish("rawzb64.data", rawzb64_data, timestamp=timestamp)
                         self.buffer.append((timestamp, rawzb64_data))
                         print(time.asctime(),rawzb64_data)
                         if len(self.buffer) >= 300:
+                            plugin.publish("rawzb64.data", rawzb64_data, timestamp=timestamp)
+                            with Open("/tmp/data_5min_rawzb64_data.txt", "w") as file:
+                                for line in self.buffer:
+                                    f.write(f"{line}\n")
+                            plugin.upload("/tmp/data_5min_rawzb64_data.txt", timestamp=timestamp)
                             fog_present = self.process_buffer(plugin)
                             self.buffer.clear()
                             if not fog_present:
