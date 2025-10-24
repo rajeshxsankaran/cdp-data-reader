@@ -56,7 +56,7 @@ class CDPClient:
         print("Powering on CDP and pump...")
         power_switch.turn_on_cdp()
         power_switch.turn_on_pump()
-        time.sleep(30)  # wait for stabilization
+        time.sleep(15)  # wait for stabilization
 
         while self.ON:
             try:
