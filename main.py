@@ -29,7 +29,7 @@ import power_switch
 # Configurable parameters
 # ============================================================
 
-BUFFER_DURATION_S = 5 * 60  # seconds
+BUFFER_DURATION_S = 15 * 60  # seconds
 LWC_FOG_THRESHOLD = 0.1     # g/m³
 FLOW_RATE_SCFM = 5.5        # ft³/min
 FLOW_RATE_M3_S = (FLOW_RATE_SCFM * (0.3048 ** 3)) / 60.0
@@ -92,7 +92,7 @@ class CDPClient:
                         #plugin.publish("rawzb64.data", rawzb64_data, timestamp=timestamp)
                         self.buffer.append((timestamp, rawzb64_data))
                         print(time.asctime(),rawzb64_data)
-                        if len(self.buffer) >= 300:
+                        if len(self.buffer) >= BUFFER_DURATION_S: # process 15 min worth of data
                             plugin.publish("rawzb64.data", rawzb64_data, timestamp=timestamp)
                             with open("/tmp/data_5min_rawzb64_data.txt", "w") as file:
                                 for time_collect,data_collect in self.buffer:
