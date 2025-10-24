@@ -45,7 +45,7 @@ def set_outlet(outlet_name, action):
     if not response.ok:
         return False
 
-    time.sleep(1)  # allow time for the state change
+    time.sleep(4)  # allow time for the state change
 
     outlets = get_outlets()
     for outlet in outlets:
