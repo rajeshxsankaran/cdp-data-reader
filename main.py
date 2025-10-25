@@ -67,7 +67,7 @@ class CDPClient:
                 self.collect_data(ser)
             except Exception as e:
                 print(f"Failed to open CDP serial connection: {e}")
-                time.sleep(2)
+                self.ON = False
 
     def collect_data(self, ser):
         init_msg = self.cdp_decoder.create_init_msg()
