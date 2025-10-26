@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-
+import sys
+import os
+import re
 from datetime import datetime
 import time
 import csv
@@ -7,11 +9,15 @@ import zlib
 import base64
 import pandas as pd
 import numpy as np
+from struct import pack, unpack
+import sage_data_client
+import argparse
+
+# Add parent directory to Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from cdp_converter import CDPConverter
 from message_headers import *
 from CDP_decoder import CDP_decoder
-from struct import pack, unpack
-import sage_data_client
 
 
 class cdp_beehive_data_decoder:
@@ -42,24 +48,23 @@ def convert_numpy_types(obj):
         return obj
 
 if __name__ == "__main__":
-
-    node_id = "W097"
-    start_date = "2025-02-18T00:00:00Z"
-    end_date = "2025-02-18T23:59:59Z"
-
-    print("\u2139 Fetching data from",start_date,"to",end_date,"from beehive for node",node_id)
-
+    parser = argparse.ArgumentParser(description="Read timestamp-value CSV and convert timestamps.")
+    parser.add_argument("filename", help="Path to the input .txt or .csv file")
+    args = parser.parse_args()
+    # Extract base pattern (e.g., 1761439658428968191-data_)
+    match = re.match(r"(\d+-data_)", args.filename)
+    if match:
+        output_file = f"{match.group(1)}decoded.csv"
+    else:
+        # fallback if pattern not matched
+        output_file = args.filename.replace(".txt", "_decoded.csv")
+    # Read the file
+    df = pd.read_csv(args.filename, header=None, names=["timestamp", "value"])
+    # Convert epoch nanoseconds to datetime
+    df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ns", utc=True)
+    #print(df.head())
+    print("\u2714 Data ingestion completed. Now decoding and generating CSV file")
     decoder = cdp_beehive_data_decoder()
-    df = sage_data_client.query(
-        start=start_date,
-        end=end_date,
-        filter={
-            "plugin": "registry.sagecontinuum.org/rajesh/cpd-data-reader:0.1.3.*",
-            "vsn": node_id
-        }
-    )
-
-    print("\u2714 Data download completed. Now decoding and generating CSV file")
     rows = []
     for _, row in df.iterrows():
         timestamp = row["timestamp"]
@@ -81,12 +86,10 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"[ERROR] Failed to decode at {timestamp}: {e}")
 
-    filename = f"decoded-data_{node_id}_{start_date}_{end_date}".replace(":", "").replace("Z", "").replace(".", "")
-    filename = filename+'.csv'
-    print("\u2139 The data is being written to",filename)
+    print("\u2139 The data is being written to",output_file)
     # Write to CSV
 
-    with open(filename, "w", newline="") as csvfile:
+    with open(output_file, "w", newline="") as csvfile:
         writer = csv.writer(csvfile)
         # Write header
         max_values = max(len(row) for row in rows) - 1
