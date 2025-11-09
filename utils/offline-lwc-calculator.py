@@ -5,6 +5,9 @@ import base64
 import zlib
 import numpy as np
 import math
+
+# Add parent directory to Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from cdp_converter import CDPConverter
 from CDP_decoder import CDP_decoder
 
