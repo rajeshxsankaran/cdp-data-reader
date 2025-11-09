@@ -164,7 +164,7 @@ class CDPClient:
 
     def calculate_LWC(self, df):
         try:
-            bin_cols = list(range(16, 46))
+            bin_cols = list(range(15, 45))
             total_drop_count = np.sum(df[:, bin_cols], axis=0)
             drop_diam_max_cm = CDP_BIN_BOUNDARIES_MICRON[1:] * 1e-4
             drop_diam_min_cm = CDP_BIN_BOUNDARIES_MICRON[:-1] * 1e-4
